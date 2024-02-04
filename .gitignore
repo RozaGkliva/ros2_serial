@@ -1,0 +1,12 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# swap files
+**/*.swp
+
+# Windows Desktop configuration files
+**/desktop.ini
+
+# vscode configuration files
+.vscode/
