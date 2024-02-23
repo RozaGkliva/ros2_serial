@@ -18,10 +18,10 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='rozaxps20',
+    maintainer='Roza Gkliva',
     maintainer_email='roza.gkliva@ttu.ee',
-    description='TODO: Package description',
-    license='TODO: License declaration',
+    description='Software interface for serial devices',
+    license='Apache 2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
