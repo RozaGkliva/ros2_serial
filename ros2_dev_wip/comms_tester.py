@@ -30,8 +30,8 @@ class CommsTester(Node):
 
         # set up serial connection to arduino
         # incoming packet info
-        self.packet_header = 'SYNC'
-        self.packet_trailer = 'CNYS'
+        self.packet_header = 'SYNCSYNC'
+        self.packet_trailer = '\n'
         self.header_length = len(self.packet_header)
 
         self.ser = serial.Serial(
@@ -43,15 +43,20 @@ class CommsTester(Node):
             bytesize=serial.EIGHTBITS,
         )
 
-        self.ser.
+        # self.ser.
         
         #set up timer to send to arduino
         self.transmitting_timer_period = 0.01  # for sending data to arduino at 100Hz
         self.create_timer(self.transmitting_timer_period, self.writeToArduino)
+
+        self.reading_timer_period = 0.1  # for reading data from arduino at 100Hz
+        self.create_timer(self.reading_timer_period, self.readFromArduino)
         
 
     def readFromArduino(self):
-        pass
+        # read from the serial port
+        incoming_data = self.ser.read(1000)
+        self.get_logger().info(f'incoming data: {incoming_data}')
 
     def writeToArduino(self):
         msg = Imu()
