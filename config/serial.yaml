@@ -1,0 +1,19 @@
+serial_interface:
+  ros__parameters:
+    serial_params:
+      port: /dev/ttyACM0
+      baud: 115200
+      # timeout: 0.1
+      # parity: N
+      # stopbits: 1
+      # bytesize: 8
+      # flowcontrol: False
+    incoming_packet_params:
+      header: 'SYNCSYNC'
+      footer: '\n'
+      length: 40
+
+    outgoing_packet_params:
+      header: 'syncsync'
+      footer: '\n'
+      length: 12

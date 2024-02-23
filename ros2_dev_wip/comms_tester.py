@@ -1,15 +1,16 @@
 #!/usr/bin/python3
 """ 
-Node that interfaces the microcat mcu over serial port.
-Handles bi-directional data transfer and publishing of relevant info.
-used to test the communication between the microcat and the computer.
+Node that interfaces a serial device, reads an incoming packet and publishes the data in ROS.
+
+dev notes:
+- testing with ROS 2 Foxy
 
 @author: Roza Gkliva
 @contact: roza.gkliva@taltech.ee
 @date: Jan. 2024
 
-
 TODO: use the rm3 motor_module and hardware interface code as reference 
+TODO: make code more modular: params come from yaml file, can talk to any serial device (within reason)
 """
 
 
@@ -29,21 +30,26 @@ class CommsTester(Node):
         super().__init__("node_comms_tester")
 
         # set up serial connection to arduino
+        self.declare_parameter("serial_params.port", "/dev/ttyUSB0")
+        self.declare_parameter("serial_params.baud", 9600)
+        self.serial_port = self.get_parameter("serial_params.port").get_parameter_value().string_value
+        self.baudrate = self.get_parameter("serial_params.baud").get_parameter_value().integer_value
+
+        self.get_logger().info(f'baud: {self.baudrate}, port: {self.serial_port}')
+
         # incoming packet info
         self.packet_header = 'SYNCSYNC'
         self.packet_trailer = '\n'
         self.header_length = len(self.packet_header)
 
         self.ser = serial.Serial(
-            "/dev/ttyACM0",
-            115200,
+            self.serial_port,
+            self.baudrate,
             timeout=0,
             parity=serial.PARITY_NONE,
             stopbits=serial.STOPBITS_ONE,
             bytesize=serial.EIGHTBITS,
         )
-
-        # self.ser.
         
         #set up timer to send to arduino
         self.transmitting_timer_period = 0.01  # for sending data to arduino at 100Hz
