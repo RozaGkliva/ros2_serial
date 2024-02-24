@@ -11,7 +11,7 @@
 
 # Download
 <ol>
-  <li>Clone the repository to your ROS 2 workspace (e.g., ```ros2_ws/```)
+  <li>Clone the repository to your ROS 2 workspace (e.g., <em>"ros2_ws/"</em>)
 
   ```
   cd ~/ros2_ws/src
@@ -31,16 +31,18 @@
   ```
   </li>
 
-  <li>Build with colcon.
+  <li>Build the package with colcon.
 
   ```
   cd ~/ros2_ws/
   colcon build --packages-select ros2-dev_wip --symlink-install
   ```
   </li>
+</ol>
 
 # Usage
 
+  With your device connected, run the interface:
   ```
   ros2 launch ros2_dev_wip serial_interface.launch.py
   ```
@@ -48,5 +50,4 @@
 
 # Roadmap
 - [ ] ~~Write script that finds the serial port~~ A script is not necessary. Added command in guide.
-- [ ] Add Arduino example (check: using parameters from yaml to set up communications - https://arduinojson.org/)
-- [ ] .amentignore in Arduino directory
+- [ ] Add Arduino example (check: using parameters from yaml to set up communications - https://arduinojson.org/); use .amentignore in Arduino directory
