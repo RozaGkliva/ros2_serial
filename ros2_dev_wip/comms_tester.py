@@ -54,9 +54,12 @@ class CommsTester(Node):
         self.get_logger().info(f'baud: {self.baudrate}, port: {self.serial_port}')
 
         # incoming packet info
-        self.packet_header = 'SYNCSYNC'
-        self.packet_trailer = '\n'
-        self.header_length = len(self.packet_header)
+        self.declare_parameter("incoming_packet_params.header", "string")
+        self.declare_parameter("incoming_packet_params.footer", "string")
+        self.declare_parameter("incoming_packet_params.length", 0)
+        self.packet_header = self.get_parameter("incoming_packet_params.header").get_parameter_value().string_value
+        self.packet_footer = self.get_parameter("incoming_packet_params.footer").get_parameter_value().string_value
+        self.packet_length = self.get_parameter("incoming_packet_params.length").get_parameter_value().integer_value
 
         self.ser = serial.Serial(
             self.serial_port,
@@ -77,8 +80,27 @@ class CommsTester(Node):
 
     def readFromArduino(self):
         # read from the serial port
-        incoming_data = self.ser.read(1000)
-        self.get_logger().info(f'incoming data: {incoming_data}')
+        incoming_data = self.ser.read(self.packet_length + len(self.packet_header) + len(self.packet_footer) + 3)
+
+        # unpack the first 4 bytes of the incoming data
+        if len(incoming_data) > 8:
+            
+            header = struct.unpack("8s", incoming_data[0: len(self.packet_header)])[0].decode('utf-8')
+
+            self.msg_start = incoming_data.index(
+                self.packet_header.encode('UTF-8')) if self.packet_header.\
+                    encode('UTF-8') in incoming_data else None
+            
+            self.get_logger().info(f'start: {self.msg_start}')
+            # self.get_logger().info(f'incoming data: {incoming_data}')
+            self.get_logger().info(f'header type: {type(header)}')
+
+            # check if the header is correct by comparing the strings
+            if header == self.packet_header:
+
+                self.get_logger().info(f'header: {header} = {self.packet_header}')
+            else:
+                self.get_logger().info(f'bad header: {header} not {self.packet_header}')
 
     def writeToArduino(self):
         msg = Imu()
