@@ -3,6 +3,8 @@
 #include "rclcpp/rclcpp.hpp"
 #include "serial/serial.h"
 
+// #include <chrono>
+
 class SerialInterface : public rclcpp::Node
 {
     public:
@@ -20,11 +22,24 @@ class SerialInterface : public rclcpp::Node
                 RCLCPP_ERROR(this->get_logger(), "Failed to open serial port: %s", e.what());
                 throw;
             }
+
+            // create a timer to read from serial port
+            timer_ = this->create_wall_timer(std::chrono::milliseconds(10), std::bind(&SerialInterface::readSerial, this));
             
         }
 
     private:
+        void readSerial()
+        {
+            if (serial_->available() > 0)
+            {
+                std::string data = serial_->readline();
+                RCLCPP_INFO(this->get_logger(), "Read from serial: %s", data.c_str());
+            }
+        }
+
         std::shared_ptr<serial::Serial> serial_;
+        rclcpp::TimerBase::SharedPtr timer_;
 
 
 };
