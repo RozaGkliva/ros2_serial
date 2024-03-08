@@ -3,7 +3,6 @@
 #include "rclcpp/rclcpp.hpp"
 #include "serial/serial.h"
 
-// #include <chrono>
 
 class SerialInterface : public rclcpp::Node
 {
@@ -13,9 +12,15 @@ class SerialInterface : public rclcpp::Node
         {
             RCLCPP_INFO(this->get_logger(), "SerialInterface Node has been created");
 
+            this->declare_parameter("serial_params.port", "/dev/ttyUSB0");
+            this->declare_parameter("serial_params.baud", 9600);
+            std::string port = this->get_parameter("serial_params.port").as_string();
+            int baud = this->get_parameter("serial_params.baud").as_int();
+            RCLCPP_INFO(this->get_logger(), "Using serial port: %s, at baud:%d", port.c_str(), baud);
+
             try
             {
-                serial_ = std::make_shared<serial::Serial>("/dev/ttyACM0", 115200, serial::Timeout::simpleTimeout(1000));
+                serial_ = std::make_shared<serial::Serial>(port, baud, serial::Timeout::simpleTimeout(1000));
             }
             catch(const std::exception& e)
             {
@@ -34,7 +39,16 @@ class SerialInterface : public rclcpp::Node
             if (serial_->available() > 0)
             {
                 std::string data = serial_->readline();
-                RCLCPP_INFO(this->get_logger(), "Read from serial: %s", data.c_str());
+                // RCLCPP_INFO(this->get_logger(), "Read from serial: %s", data.c_str());
+                // print out the entire packet
+                RCLCPP_INFO(this->get_logger(), "Read from serial: ");
+                for (uint8_t byte: data) {
+                    RCLCPP_INFO(this->get_logger(), "0x%02x ", byte);
+                }
+
+                // take the first 8 bytes and convert them to  a string
+                std::string syncstr = data.substr(0, 16);
+                RCLCPP_INFO(this->get_logger(), "Read from serial: %s", syncstr.c_str()); 
             }
         }
 

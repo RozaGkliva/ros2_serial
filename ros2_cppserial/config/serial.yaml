@@ -1,0 +1,5 @@
+serial_interface:
+  ros__parameters:
+    serial_params:
+      port: "/dev/ttyACM0"
+      baud: 115200
