@@ -3,10 +3,15 @@
 # Requirements
 - Ubuntu 20.04 LTS (Focal Fossa)
 - ROS 2 Foxy Fitzroy or later
-- pyserial: install from PyPI
+- for pyserial: install from PyPI
   ```
   python3 -m pip install pyserial
   ```
+- for cpp: install serial interface library LibSerial
+  ```
+  sudo apt install libserial-dev
+  ```
+
 
 
 # Download
