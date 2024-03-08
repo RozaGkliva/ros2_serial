@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>ros2_dev_wip</name>
+  <name>ros2_pyserial</name>
   <version>0.0.0</version>
   <description>Software interface for serial devices</description>
   <maintainer email="roza.gkliva@ttu.ee">Roza Gkliva</maintainer>

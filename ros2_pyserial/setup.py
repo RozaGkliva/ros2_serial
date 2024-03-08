@@ -3,7 +3,7 @@ from glob import glob
 
 from setuptools import setup
 
-package_name = 'ros2_dev_wip'
+package_name = 'ros2_pyserial'
 
 setup(
     name=package_name,
@@ -25,7 +25,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'serial_interface = ros2_dev_wip.comms_tester:main',
+            'serial_interface = ros2_pyserial.comms_tester:main',
         ],
     },
 )

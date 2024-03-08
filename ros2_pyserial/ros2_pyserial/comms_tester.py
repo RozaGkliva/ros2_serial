@@ -84,23 +84,24 @@ class CommsTester(Node):
 
         # unpack the first 4 bytes of the incoming data
         if len(incoming_data) > 8:
+
+            self.get_logger().info(f'incoming data: {incoming_data}')
             
-            header = struct.unpack("8s", incoming_data[0: len(self.packet_header)])[0].decode('utf-8')
+            # header = struct.unpack("8s", incoming_data[0: len(self.packet_header)])[0].decode('utf-8')
 
-            self.msg_start = incoming_data.index(
-                self.packet_header.encode('UTF-8')) if self.packet_header.\
-                    encode('UTF-8') in incoming_data else None
+            # self.msg_start = incoming_data.index(
+            #     self.packet_header.encode('UTF-8')) if self.packet_header.\
+            #         encode('UTF-8') in incoming_data else None
             
-            self.get_logger().info(f'start: {self.msg_start}')
-            # self.get_logger().info(f'incoming data: {incoming_data}')
-            self.get_logger().info(f'header type: {type(header)}')
+            # self.get_logger().info(f'start: {self.msg_start}')
+            # self.get_logger().info(f'header type: {type(header)}')
 
-            # check if the header is correct by comparing the strings
-            if header == self.packet_header:
+            # # check if the header is correct by comparing the strings
+            # if header == self.packet_header:
 
-                self.get_logger().info(f'header: {header} = {self.packet_header}')
-            else:
-                self.get_logger().info(f'bad header: {header} not {self.packet_header}')
+            #     self.get_logger().info(f'header: {header} = {self.packet_header}')
+            # else:
+            #     self.get_logger().info(f'bad header: {header} not {self.packet_header}')
 
     def writeToArduino(self):
         msg = Imu()
