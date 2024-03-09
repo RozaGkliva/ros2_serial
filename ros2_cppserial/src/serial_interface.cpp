@@ -3,6 +3,8 @@
 #include "rclcpp/rclcpp.hpp"
 #include "serial/serial.h"
 
+#include <variant>
+
 
 class SerialInterface : public rclcpp::Node
 {
@@ -14,9 +16,13 @@ class SerialInterface : public rclcpp::Node
 
             this->declare_parameter("serial_params.port", "/dev/ttyUSB0");
             this->declare_parameter("serial_params.baud", 9600);
+            this->declare_parameter("incoming_message.header", "start");
+            this->declare_parameter("incoming_message.packet_size", 0);
+            this->declare_parameter("incoming_message.footer", "end");
+
             std::string port = this->get_parameter("serial_params.port").as_string();
             int baud = this->get_parameter("serial_params.baud").as_int();
-            RCLCPP_INFO(this->get_logger(), "Using serial port: %s, at baud:%d", port.c_str(), baud);
+            // RCLCPP_INFO(this->get_logger(), "Using serial port: %s, at baud:%d", port.c_str(), baud);
 
             try
             {
@@ -28,12 +34,26 @@ class SerialInterface : public rclcpp::Node
                 throw;
             }
 
+            std::string header = this->get_parameter("incoming_message.header").as_string();
+            std::string footer = this->get_parameter("incoming_message.footer").as_string();
+            int8_t packet_size = this->get_parameter("incoming_message.packet_size").as_int();
+
+            
+
             // create a timer to read from serial port
             timer_ = this->create_wall_timer(std::chrono::milliseconds(10), std::bind(&SerialInterface::readSerial, this));
             
         }
 
     private:
+        // define a struct to hold the parsed data
+        struct PayloadData
+        {
+            std::vector<std::string> content;
+            std::vector<int> varLens;
+            std::vector<std::variant<float, short>> variables;  // std::variant is a type-safe union to hold different types of variables
+        }; 
+        
         void readSerial()
         {
             if (serial_->available() > 0)
