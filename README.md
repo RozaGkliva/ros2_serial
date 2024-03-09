@@ -7,11 +7,14 @@
   ```
   python3 -m pip install pyserial
   ```
-- for cpp: install serial interface library LibSerial
+- for cpp: install serial interface library
   ```
-  sudo apt install libserial-dev
+  git clone https://github.com/RoverRobotics-forks/serial-ros2
+  cd serial-ros2/
+  make
+  make install
+  cd ~/dev_ws/ && colcon build --packages-select serial
   ```
-
 
 
 # Download
@@ -19,7 +22,6 @@
   <li>Clone the repository to your ROS 2 workspace (e.g., <em>"ros2_ws/"</em>)
 
   ```
-  cd ~/ros2_ws/src
   git clone https://github.com/RozaGkliva/ros2_dev_wip.git
   ```
   </li>
@@ -36,11 +38,11 @@
   ```
   </li>
 
-  <li>Build the package with colcon.
+  <li>Build the packages with colcon.
 
   ```
   cd ~/ros2_ws/
-  colcon build --packages-select ros2-dev_wip --symlink-install
+  colcon build --packages-select ros2_cppserial ros2_pyserial --symlink-install
   ```
   </li>
 </ol>
@@ -49,10 +51,16 @@
 
   With your device connected, run the interface:
   ```
-  ros2 launch ros2_dev_wip serial_interface.launch.py
+  ros2 launch ros2_cppserial serial_interface.launch.py
   ```
+  or
+  ```
+  ros2 launch ros2_pyserial serial_interface.launch.py
+  ```
+
 
 
 # Roadmap
 - [ ] ~~Write script that finds the serial port~~ A script is not necessary. Added command in guide.
 - [ ] Add Arduino example (check: using parameters from yaml to set up communications - https://arduinojson.org/); use .amentignore in Arduino directory
+- [ ] Make node flexible with parameters in yaml file
