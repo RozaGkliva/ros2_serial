@@ -40,10 +40,10 @@ from rclpy.node import Node
 from sensor_msgs.msg import Imu
 
 
-class CommsTester(Node):
+class SerialInterface(Node):
 
     def __init__(self):
-        super().__init__("node_comms_tester")
+        super().__init__("serial_interface")
 
         # set up serial connection to arduino
         self.declare_parameter("serial_params.port", "/dev/ttyUSB0")
@@ -119,12 +119,12 @@ class CommsTester(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    node_comms_tester = CommsTester()
-    rclpy.spin(node_comms_tester)
+    serial_interface = SerialInterface()
+    rclpy.spin(serial_interface)
     # Destroy the node explicitly
     # (optional - otherwise it will be done automatically
     # when the garbage collector destroys the node object)
-    node_comms_tester.destroy_node()
+    serial_interface.destroy_node()
     rclpy.shutdown()
 
 
