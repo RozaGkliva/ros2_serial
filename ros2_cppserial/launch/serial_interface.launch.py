@@ -10,7 +10,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
 
     params_dir = get_package_share_directory('ros2_cppserial')
-    params_file = os.path.join(params_dir, 'config', 'serial.yaml')
+    params_file = os.path.join(params_dir, 'config', 'hydromast.yaml')
 
     if os.path.exists(params_file):
         print("Found file: ", params_file)

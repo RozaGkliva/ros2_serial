@@ -24,7 +24,7 @@ class SerialInterface : public rclcpp::Node
 
             std::string port = this->get_parameter("serial_params.port").as_string();
             int baud = this->get_parameter("serial_params.baud").as_int();
-            // RCLCPP_INFO(this->get_logger(), "Using serial port: %s, at baud:%d", port.c_str(), baud);
+            RCLCPP_INFO(this->get_logger(), "Using serial port: %s, at baud:%d", port.c_str(), baud);
 
             try
             {
@@ -43,7 +43,8 @@ class SerialInterface : public rclcpp::Node
             
 
             // create a timer to read from serial port
-            timer_ = this->create_wall_timer(std::chrono::milliseconds(10), std::bind(&SerialInterface::readSerial, this));
+            timer_ = this->create_wall_timer(std::chrono::milliseconds(20), std::bind(&SerialInterface::readSerial, this));
+
             // create publisher 
             publisher_ = this->create_publisher<ros2_serial_interfaces::msg::SerialString>("serial_data", 10);  // TODO: topic name from yaml
 

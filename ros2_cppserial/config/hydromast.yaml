@@ -1,0 +1,16 @@
+serial_interface:
+  ros__parameters:
+    serial_params:
+      port: "/dev/ttyUSB0"
+      baud: 115200
+    incoming_message:
+      header: "SYNCSYNC"
+      footer: "/n"
+      packet_size: 50
+
+      # payload:
+      #   content: ["frequency", "zero_direction", "amplitude", "phase", "frequency", "zero_direction", "amplitude", "phase", "frequency", "zero_direction", "amplitude", "phase", "frequency", "zero_direction", "amplitude", "phase"]
+      #   var_lens: [4, 2, 2, 2, 4, 2, 2, 2, 4, 2, 2, 2, 4, 2, 2, 2]
+      # packet: "SYNCSYNC" + "DATA" + "/n": 8 + 40 + 2 = 50 bytes
+      # data: frequency, zero_direction, amplitude, phase
+      # 4 x {float (4), int (2), int (2), float (2)}: 40 bytes 
