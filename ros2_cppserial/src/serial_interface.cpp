@@ -5,6 +5,8 @@
 
 #include <variant>
 
+#include "ros2_serial_interfaces/msg/serial_string.hpp"
+
 
 class SerialInterface : public rclcpp::Node
 {
@@ -42,6 +44,9 @@ class SerialInterface : public rclcpp::Node
 
             // create a timer to read from serial port
             timer_ = this->create_wall_timer(std::chrono::milliseconds(10), std::bind(&SerialInterface::readSerial, this));
+            // create publisher 
+            publisher_ = this->create_publisher<ros2_serial_interfaces::msg::SerialString>("serial_data", 10);  // TODO: topic name from yaml
+
             
         }
 
@@ -53,22 +58,32 @@ class SerialInterface : public rclcpp::Node
             std::vector<int> varLens;
             std::vector<std::variant<float, short>> variables;  // std::variant is a type-safe union to hold different types of variables
         }; 
+
+        rclcpp::Publisher<ros2_serial_interfaces::msg::SerialString>::SharedPtr publisher_;
         
         void readSerial()
         {
-            if (serial_->available() > 0)
+            if (serial_->available() > 1)
             {
+                auto message = ros2_serial_interfaces::msg::SerialString();
+                message.header.stamp = this->get_clock()->now();
+                message.header.frame_id = "serial_data";        // TODO: frame_id from yaml
                 std::string data = serial_->readline();
-                // RCLCPP_INFO(this->get_logger(), "Read from serial: %s", data.c_str());
+
+                message.data = data;
+                RCLCPP_INFO(this->get_logger(), "Read from serial: %s", data.c_str());
                 // print out the entire packet
-                RCLCPP_INFO(this->get_logger(), "Read from serial: ");
-                for (uint8_t byte: data) {
-                    RCLCPP_INFO(this->get_logger(), "0x%02x ", byte);
-                }
+                // RCLCPP_INFO(this->get_logger(), "Read from serial: ");
+                // for (uint8_t byte: data) {
+                //     RCLCPP_INFO(this->get_logger(), "0x%02x ", byte);
+                // }
 
                 // take the first 8 bytes and convert them to  a string
-                std::string syncstr = data.substr(0, 16);
-                RCLCPP_INFO(this->get_logger(), "Read from serial: %s", syncstr.c_str()); 
+                // std::string syncstr = data.substr(0, 16);
+                // RCLCPP_INFO(this->get_logger(), "Read from serial: %s", syncstr.c_str()); 
+
+                // publish the message
+                publisher_->publish(message);
             }
         }
 

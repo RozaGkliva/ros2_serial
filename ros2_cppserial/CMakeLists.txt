@@ -27,10 +27,11 @@ find_package(ament_cmake REQUIRED)
 # find_package(<dependency> REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(serial REQUIRED)
+find_package(ros2_serial_interfaces REQUIRED)
 
 # install executable
 add_executable(serial_interface src/serial_interface.cpp)
-ament_target_dependencies(serial_interface rclcpp serial)
+ament_target_dependencies(serial_interface rclcpp serial ros2_serial_interfaces)
 
 # install executable
 install(TARGETS
