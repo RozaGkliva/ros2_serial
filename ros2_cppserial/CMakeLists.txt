@@ -29,9 +29,15 @@ find_package(rclcpp REQUIRED)
 find_package(serial REQUIRED)
 find_package(ros2_serial_interfaces REQUIRED)
 
+include_directories(
+  include
+)
+
 # install executable
 add_executable(serial_interface src/serial_interface.cpp)
 ament_target_dependencies(serial_interface rclcpp serial ros2_serial_interfaces)
+
+# add_executable(serial_interface_node src/serial_interface_node.cpp)
 
 # install executable
 install(TARGETS
