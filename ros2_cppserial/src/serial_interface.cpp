@@ -8,10 +8,9 @@
 SerialInterface::SerialInterface()
     : Node("serial_interface")
 {
-    // RCLCPP_INFO(this->get_logger(), "SerialInterface Node has been created");
-
-    this->declare_parameter("serial_params.port", "/dev/ttyUSB0");
+    // this->declare_parameter("serial_params.port", "/dev/ttyUSB0");
     this->declare_parameter("serial_params.baud", 9600);
+    this->declare_parameter("serial_params.device_hwid", "id");
     this->declare_parameter("incoming_message.header", "start");
     this->declare_parameter("incoming_message.packet_size", 0);
     this->declare_parameter("incoming_message.footer", "end");
@@ -19,9 +18,11 @@ SerialInterface::SerialInterface()
     this->declare_parameter("publish_topic.name", "name");
     this->declare_parameter("publish_topic.frame_id", "fid");
 
-    std::string port = this->get_parameter("serial_params.port").as_string();
-    int baud = this->get_parameter("serial_params.baud").as_int();
-    RCLCPP_INFO(this->get_logger(), "Trying to use serial port: %s, at baud:%d", port.c_str(), baud);  // TODO: get port from scan_ports(), with device_id from yaml
+    // std::string port = this->get_parameter("serial_params.port").as_string();
+    baud_ = this->get_parameter("serial_params.baud").as_int();
+    device_hwid_ = this->get_parameter("serial_params.device_hwid").as_string();
+
+    RCLCPP_INFO(this->get_logger(), "Trying to find device with hardware ID: %s", device_hwid_.c_str());
 
     device_port = scan_ports();
     if (device_port.compare("nan") != 0)               // if the port is not 'nan' then try connecting
@@ -32,16 +33,6 @@ SerialInterface::SerialInterface()
     {
         throw std::runtime_error("Device port not found!");
     }
-
-    // try
-    // {
-    //     serial_ = std::make_shared<serial::Serial>(port, baud, serial::Timeout::simpleTimeout(1000));
-    // }
-    // catch(const std::exception& e)
-    // {
-    //     RCLCPP_ERROR(this->get_logger(), "Failed to open serial port: %s", e.what());
-    //     throw;
-    // }
 
     std::string header = this->get_parameter("incoming_message.header").as_string();
     std::string footer = this->get_parameter("incoming_message.footer").as_string();
@@ -76,12 +67,8 @@ std::string SerialInterface::scan_ports()
     while( iter != devices_found.end() )
     {
         serial::PortInfo device = *iter++;
-
-        // find serial device and get port
         std::string device_ = device.hardware_id.c_str();
-
-        // find the desired device
-        std::size_t device_found = device_.find("0403:6001");   // TODO: hardware_id from yaml
+        std::size_t device_found = device_.find(device_hwid_);
 
         if(device_found!=std::string::npos )
         {   
@@ -106,7 +93,7 @@ std::string SerialInterface::scan_ports()
  */
 void SerialInterface::init_serial(std::string port_)
 {
-    std::int32_t baud_ = 115200;            // TODO: baud rate from yaml
+    // std::int32_t baud_ = 115200;            // TODO: baud rate from yaml
 
     // try connecting to serial port
     try

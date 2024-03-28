@@ -3,6 +3,7 @@ serial_interface:
     serial_params:
       port: "/dev/ttyUSB0"
       baud: 115200
+      device_hwid: "0403:6001"
     incoming_message:
       header: "N03"
       footer: "/r/n"

@@ -23,7 +23,8 @@ private:
 
     rclcpp::Publisher<ros2_serial_interfaces::msg::SerialString>::SharedPtr publisher_;
     std::string frame_id_;
-    // std::shared_ptr<serial::Serial> serial_;
+    std::string device_hwid_;
+    int baud_;
     rclcpp::TimerBase::SharedPtr timer_;
 };
 
