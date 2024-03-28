@@ -25,6 +25,7 @@ SerialInterface::SerialInterface()
     RCLCPP_INFO(this->get_logger(), "Trying to find device with hardware ID: %s", device_hwid_.c_str());
 
     device_port = scan_ports();
+    RCLCPP_INFO(this->get_logger(), "Device port: %s", device_port.c_str());
     if (device_port.compare("nan") != 0)               // if the port is not 'nan' then try connecting
     {
         SerialInterface::init_serial(device_port);           // setup and connect to serial port
@@ -70,16 +71,19 @@ std::string SerialInterface::scan_ports()
         std::string device_ = device.hardware_id.c_str();
         std::size_t device_found = device_.find(device_hwid_);
 
-        if(device_found!=std::string::npos )
+        // printf( "(port: %s, device description: %s, device hardware_id: %s)\n", device.port.c_str(), device.description.c_str(), device.hardware_id.c_str() );
+
+        if(device_found!=std::string::npos)
         {   
-            // RCLCPP_INFO(this->get_logger(), "device_found: %s\n", device_.c_str());
+            RCLCPP_INFO(this->get_logger(), "device_found: %s\n", device_.c_str());
             port_ = device.port.c_str();
             RCLCPP_INFO(this->get_logger(), "Found device_port: %s\n", port_.c_str());
         }
-        else
-        {
-            port_ = "nan";
-        }
+        // else
+        // {
+        //     RCLCPP_INFO(this->get_logger(), "Device not found, returning port as nan");
+        //     port_ = "nan";
+        // }
     }
     return port_;
 }

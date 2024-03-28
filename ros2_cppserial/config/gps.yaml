@@ -1,0 +1,14 @@
+gps_interface:
+  ros__parameters:
+    serial_params:
+      port: "/dev/ttyUSB0"
+      baud: 460800
+      device_hwid: "0403:6015"
+    incoming_message:
+      header: "gps"
+      footer: ""
+      packet_size: 0
+      rate_hz: 10
+    publish_topic:
+      name: "gps_data"
+      frame_id: "gps"

@@ -1,4 +1,4 @@
-serial_interface:
+hydromast_interface:
   ros__parameters:
     serial_params:
       port: "/dev/ttyUSB0"
@@ -10,5 +10,5 @@ serial_interface:
       packet_size: 0
       rate_hz: 50
     publish_topic:
-      name: "hydrophone_data"
+      name: "hydromast_data"
       frame_id: "n03"

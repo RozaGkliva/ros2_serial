@@ -10,23 +10,34 @@ from launch_ros.actions import Node
 def generate_launch_description():
 
     params_dir = get_package_share_directory('ros2_cppserial')
-    params_file = os.path.join(params_dir, 'config', 'hydromast.yaml')
+    hydromast_params_file = os.path.join(params_dir, 'config', 'hydromast.yaml')
+    gps_params_file = os.path.join(params_dir, 'config', 'gps.yaml')
 
-    if os.path.exists(params_file):
-        print("Found file: ", params_file)
+    if os.path.exists(hydromast_params_file):
+        print("Found file: ", hydromast_params_file)
     else:
-        print("File not found: ", params_file)
+        print("File not found: ", hydromast_params_file)
     
-    serial_interface_node = Node(
+    hydromast_interface_node = Node(
         package='ros2_cppserial',
         executable='serial_interface',
-        name='serial_interface',
+        name='hydromast_interface',
         output='both',
         emulate_tty=True,
         # parameters=[{"port": "/dev/ttyACM0"}],
-        parameters=[params_file],
+        parameters=[hydromast_params_file],
+    )    
+    gps_interface_node = Node(
+        package='ros2_cppserial',
+        executable='serial_interface',
+        name='gps_interface',
+        output='both',
+        emulate_tty=True,
+        # parameters=[{"port": "/dev/ttyACM0"}],
+        parameters=[gps_params_file],
     )
 
     return LaunchDescription([
-        serial_interface_node
+        hydromast_interface_node,
+        gps_interface_node,
     ])
