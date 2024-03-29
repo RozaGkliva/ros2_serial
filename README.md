@@ -66,3 +66,4 @@
 - [ ] Make node flexible with parameters in yaml file
 - [ ] Published message type can be set in yaml, the actual message type can be defined in ros2_serial_interfaces, TODO: look into parsing the packet and populating the message (can I look into the message type to plan the parsing?)
 - [ ] c++ version works better and faster. Consider removing the python version
+- [ ] license got messed up when the repository structure changed. TODO: FIX!
