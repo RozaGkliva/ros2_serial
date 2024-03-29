@@ -61,6 +61,8 @@
 
 
 # Roadmap
-- [ ] ~~Write script that finds the serial port~~ A script is not necessary. Added command in guide.
+- [x] ~~Write script that finds the serial port~~ A script is not necessary. Added command in guide.
 - [ ] Add Arduino example (check: using parameters from yaml to set up communications - https://arduinojson.org/); use .amentignore in Arduino directory
 - [ ] Make node flexible with parameters in yaml file
+- [ ] Published message type can be set in yaml, the actual message type can be defined in ros2_serial_interfaces, TODO: look into parsing the packet and populating the message (can I look into the message type to plan the parsing?)
+- [ ] c++ version works better and faster. Consider removing the python version
