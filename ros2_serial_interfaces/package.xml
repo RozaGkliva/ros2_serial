@@ -4,8 +4,8 @@
   <name>ros2_serial_interfaces</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="roza.gkliva@ttu.ee">roza</maintainer>
-  <license>TODO: License declaration</license>
+  <maintainer email="roza.gkliva@ttu.ee">Roza Gkliva</maintainer>
+  <license>Apache-2.0</license>
 
   <depend>std_msgs</depend>
 

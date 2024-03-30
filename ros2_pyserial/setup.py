@@ -21,7 +21,7 @@ setup(
     maintainer='Roza Gkliva',
     maintainer_email='roza.gkliva@ttu.ee',
     description='Software interface for serial devices',
-    license='Apache 2.0',
+    license='Apache-2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
