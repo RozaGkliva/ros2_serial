@@ -3,7 +3,7 @@
 <package format="3">
   <name>ros2_serial_interfaces</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Custom interfaces for ros2_serial</description>
   <maintainer email="roza.gkliva@ttu.ee">Roza Gkliva</maintainer>
   <license>Apache-2.0</license>
 
