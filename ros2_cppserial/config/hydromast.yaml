@@ -1,7 +1,8 @@
 hydromast_interface:
   ros__parameters:
     serial_params:
-      port: "/dev/ttyUSB0"
+      use_port: True       # if use_port is False, device_hwid will be used to scan all ports
+      port: "/dev/ttyUSB0"  # if port is set it will be used instead of device_hwid
       baud: 115200
       device_hwid: "0403:6001"
     incoming_message:

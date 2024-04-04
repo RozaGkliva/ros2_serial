@@ -22,32 +22,46 @@
 SerialInterface::SerialInterface()
     : Node("serial_interface")
 {
-    // this->declare_parameter("serial_params.port", "/dev/ttyUSB0");
+    // get parameters
+    this->declare_parameter("serial_params.use_port", false);
+    bool use_port = this->get_parameter("serial_params.use_port").as_bool();
+
+    if (use_port)
+    {
+        this->declare_parameter("serial_params.port", "default");
+        std::string port = this->get_parameter("serial_params.port").as_string();
+        RCLCPP_INFO(this->get_logger(), "Port provided: %s", port.c_str());
+        device_port = port;
+    }
+    else
+    {
+        // RCLCPP_INFO(this->get_logger(), "Port not provided, trying to find device with hardware ID");
+        this->declare_parameter("serial_params.device_hwid", "id");
+        device_hwid_ = this->get_parameter("serial_params.device_hwid").as_string();
+       RCLCPP_INFO(this->get_logger(), "Port not provided. Trying to find device with hardware ID: %s", device_hwid_.c_str());
+        device_port = scan_ports();
+
+    }
+
     this->declare_parameter("serial_params.baud", 9600);
-    this->declare_parameter("serial_params.device_hwid", "id");
+    baud_ = this->get_parameter("serial_params.baud").as_int();
+
+    // RCLCPP_INFO(this->get_logger(), "Device port: %s", device_port.c_str());
+    if (device_port.compare("nan") != 0)
+    {
+        SerialInterface::init_serial(device_port);
+    }
+    else
+    {
+        throw std::runtime_error("Device port not found!");
+    }
+
     this->declare_parameter("incoming_message.header", "start");
     this->declare_parameter("incoming_message.packet_size", 0);
     this->declare_parameter("incoming_message.footer", "end");
     this->declare_parameter("incoming_message.rate_hz", 0);
     this->declare_parameter("publish_topic.name", "name");
     this->declare_parameter("publish_topic.frame_id", "fid");
-
-    // std::string port = this->get_parameter("serial_params.port").as_string();
-    baud_ = this->get_parameter("serial_params.baud").as_int();
-    device_hwid_ = this->get_parameter("serial_params.device_hwid").as_string();
-
-    RCLCPP_INFO(this->get_logger(), "Trying to find device with hardware ID: %s", device_hwid_.c_str());
-
-    device_port = scan_ports();
-    RCLCPP_INFO(this->get_logger(), "Device port: %s", device_port.c_str());
-    if (device_port.compare("nan") != 0)               // if the port is not 'nan' then try connecting
-    {
-        SerialInterface::init_serial(device_port);           // setup and connect to serial port
-    }
-    else
-    {
-        throw std::runtime_error("Device port not found!");
-    }
 
     std::string header = this->get_parameter("incoming_message.header").as_string();
     std::string footer = this->get_parameter("incoming_message.footer").as_string();
@@ -95,7 +109,7 @@ std::string SerialInterface::scan_ports()
         }
         // else
         // {
-        //     RCLCPP_INFO(this->get_logger(), "Device not found, returning port as nan");
+        //     RCLCPP_INFO(this->get_logger(), "Device not found, returning port as nan");  // TODO: figure out why this runs even when device is found
         //     port_ = "nan";
         // }
     }

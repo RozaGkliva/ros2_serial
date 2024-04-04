@@ -10,7 +10,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
 
     params_dir = get_package_share_directory('ros2_cppserial')
-    hydromast_params_file = os.path.join(params_dir, 'config', 'hydromast.yaml')
+    hydromast_params_file = os.path.join(params_dir, 'config', 'serial.yaml')
     gps_params_file = os.path.join(params_dir, 'config', 'gps.yaml')
 
     if os.path.exists(hydromast_params_file):
@@ -39,5 +39,5 @@ def generate_launch_description():
 
     return LaunchDescription([
         hydromast_interface_node,
-        gps_interface_node,
+        # gps_interface_node,
     ])
