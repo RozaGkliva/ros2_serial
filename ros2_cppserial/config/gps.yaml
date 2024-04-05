@@ -1,6 +1,7 @@
 gps_interface:
   ros__parameters:
     serial_params:
+      use_port: False
       port: "/dev/ttyUSB0"
       baud: 460800
       device_hwid: "0403:6015"
