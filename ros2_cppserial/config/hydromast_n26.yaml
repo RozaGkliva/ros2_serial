@@ -1,4 +1,4 @@
-hydromast_interface:
+hydromast_n26_interface:
   ros__parameters:
     serial_params:
       use_port: True       # if use_port is False, device_hwid will be used to scan all ports
