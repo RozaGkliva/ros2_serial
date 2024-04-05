@@ -154,7 +154,7 @@ void SerialInterface::readSerial()
         std::string data = serial_device.readline();
 
         message.data = data;
-        RCLCPP_INFO(this->get_logger(), "Read from serial: %s", data.c_str());
+        // RCLCPP_INFO(this->get_logger(), "Read from serial: %s", data.c_str());
 
         // publish the message
         publisher_->publish(message);

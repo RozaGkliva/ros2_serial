@@ -26,7 +26,7 @@ def generate_launch_description():
     hydromast_left_interface_node = Node(
         package='ros2_cppserial',
         executable='serial_interface',
-        name='hydromast_interface',
+        name='hydromast_n27_interface',
         output='both',
         emulate_tty=True,
         parameters=[left_hydromast_params_file],
@@ -34,7 +34,7 @@ def generate_launch_description():
     hydromast_right_interface_node = Node(
         package='ros2_cppserial',
         executable='serial_interface',
-        name='hydromast_interface',
+        name='hydromast_n26_interface',
         output='both',
         emulate_tty=True,
         parameters=[right_hydromast_params_file],
