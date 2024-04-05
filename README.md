@@ -4,7 +4,7 @@ The serial interface node reads data from a serial port at a fixed rate, and pub
 The following refers to the c++ package (ros2_cppserial) contained in this repository. As of March 2024 the python package (ros2_pyserial) is no longer updated as the c++ version was more stable and fast.
 
 # Requirements
-- Ubuntu 20.04 LTS (Focal Fossa)
+- Ubuntu 20.04 LTS (Focal Fossa) or later
 - ROS 2 Foxy Fitzroy or later
 - install serial library for c++
     <!-- - install serial interface library (*NB! c++ seems more stable and fast*) -->
