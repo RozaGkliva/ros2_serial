@@ -36,7 +36,7 @@ Clone the repository to your ROS 2 workspace
   <li>Edit the parameters in the configuration file
 
   ```
-  ~/<path to ros2_serial>/config/serial.yaml
+  ~/<path to ros2_serial>/ros_cppserial/config/serial.yaml
   ```
   Parameters (with example values):
   ```yaml
@@ -81,7 +81,7 @@ Clone the repository to your ROS 2 workspace
 
   With your device connected, run the interface:
   ```
-  ros2 launch ros2_pyserial serial_interface.launch.py
+  ros2 launch ros2_cppserial serial_interface.launch.py
   ```
 
   </li>
