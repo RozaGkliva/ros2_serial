@@ -71,10 +71,12 @@ SerialInterface::SerialInterface()
     frame_id_ = this->get_parameter("publish_topic.frame_id").as_string();
 
     // create a timer to read from serial port
-    auto timer_period_ = 1/read_rate;
+    auto timer_period_ = int((1.0/read_rate) * 1000);  // calculate sampling period and convert to milliseconds
     timer_ = this->create_wall_timer(std::chrono::milliseconds(timer_period_), std::bind(&SerialInterface::readSerial, this));
 
-    // create publisher
+    // create messag type and publisher
+    message_ = ros2_serial_interfaces::msg::SerialString();
+    message_.header.frame_id = frame_id_;
     publisher_ = this->create_publisher<ros2_serial_interfaces::msg::SerialString>(topic_name, 10); 
 }
 
@@ -146,18 +148,17 @@ void SerialInterface::readSerial()
 {
     if (serial_device.available() > 1)
     {   
-        auto message = ros2_serial_interfaces::msg::SerialString();
-        message.header.stamp = this->get_clock()->now();
+        message_.header.stamp = this->get_clock()->now();
         // use frame_id from node
-        message.header.frame_id = frame_id_;
+        message_.header.frame_id = frame_id_;
 
         std::string data = serial_device.readline();
 
-        message.data = data;
+        message_.data = data;
         // RCLCPP_INFO(this->get_logger(), "Read from serial: %s", data.c_str());
 
         // publish the message
-        publisher_->publish(message);
+        publisher_->publish(message_);
     }
 }
 

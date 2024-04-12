@@ -35,6 +35,7 @@ private:
     void init_serial(std::string device_port_);
     void readSerial();
 
+    ros2_serial_interfaces::msg::SerialString message_;
     rclcpp::Publisher<ros2_serial_interfaces::msg::SerialString>::SharedPtr publisher_;
     std::string frame_id_;
     std::string device_hwid_;
