@@ -1,0 +1,15 @@
+whiskers_interface:
+  ros__parameters:
+    serial_params:
+      use_port: True       # if use_port is False, device_hwid will be used to scan all ports
+      port: "/dev/ttyACM0"   # if port is fixed it should be used instead of device_hwid
+      baud: 115200
+      device_hwid: "0403:6001"
+    incoming_message:
+      header: ""
+      footer: ""
+      packet_size: 0
+      rate_hz: 50
+    publish_topic:
+      name: "whisker_array_data"
+      frame_id: "whisker_array"
