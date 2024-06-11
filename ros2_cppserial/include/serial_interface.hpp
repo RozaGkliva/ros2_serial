@@ -41,6 +41,8 @@ private:
     std::string device_hwid_;
     int baud_;
     rclcpp::TimerBase::SharedPtr timer_;
+    bool is_single_;
+    bool is_continuous_;
 };
 
 #endif /* SERIAL_INTERFACE_HPP_ */

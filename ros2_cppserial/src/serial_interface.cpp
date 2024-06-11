@@ -62,17 +62,28 @@ SerialInterface::SerialInterface()
     this->declare_parameter("incoming_message.rate_hz", 0);
     this->declare_parameter("publish_topic.name", "name");
     this->declare_parameter("publish_topic.frame_id", "fid");
+    this->declare_parameter("outgoing_message.is_single", false);
+    this->declare_parameter("outgoing_message.is_continuous", true);
 
     std::string header = this->get_parameter("incoming_message.header").as_string();
     std::string footer = this->get_parameter("incoming_message.footer").as_string();
     // int8_t packet_size = this->get_parameter("incoming_message.packet_size").as_int();
-    int8_t read_rate = this->get_parameter("incoming_message.rate_hz").as_int();
+    int16_t read_rate = this->get_parameter("incoming_message.rate_hz").as_int();
     std::string topic_name = this->get_parameter("publish_topic.name").as_string();
     frame_id_ = this->get_parameter("publish_topic.frame_id").as_string();
+
+    is_single_ = this->get_parameter("outgoing_message.is_single").as_bool();
+    is_continuous_ = this->get_parameter("outgoing_message.is_continuous").as_bool();
 
     // create a timer to read from serial port
     auto timer_period_ = int((1.0/read_rate) * 1000);  // calculate sampling period and convert to milliseconds
     timer_ = this->create_wall_timer(std::chrono::milliseconds(timer_period_), std::bind(&SerialInterface::readSerial, this));
+
+    // if ati sensor is in continuous mode, send a request via serial
+    if (is_continuous_)
+    {
+        serial_device.write("s");
+    }
 
     // create messag type and publisher
     message_ = ros2_serial_interfaces::msg::SerialString();
@@ -137,6 +148,10 @@ void SerialInterface::init_serial(std::string port_)
         serial::Timeout to_ = serial::Timeout(200, 200, 0, 200, 0);
         serial_device.setTimeout(to_);
         serial_device.open();
+        // if (is_continuous_)
+        // {
+        //     serial_device.write("s");
+        // }
     }
     catch(serial::IOException& e)
     {
@@ -146,6 +161,13 @@ void SerialInterface::init_serial(std::string port_)
 
 void SerialInterface::readSerial()
 {
+    if (is_single_)
+    {
+        // send message to serial port to request a measurement
+        serial_device.write("r");
+    }
+
+    // read message from serial port based on timer
     if (serial_device.available() > 1)
     {   
         message_.header.stamp = this->get_clock()->now();
@@ -155,7 +177,7 @@ void SerialInterface::readSerial()
         std::string data = serial_device.readline();
 
         message_.data = data;
-        // RCLCPP_INFO(this->get_logger(), "Read from serial: %s", data.c_str());
+        RCLCPP_INFO(this->get_logger(), "Read from serial: %s", data.c_str());
 
         // publish the message
         publisher_->publish(message_);
