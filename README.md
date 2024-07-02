@@ -33,28 +33,36 @@ Clone the repository to your ROS 2 workspace
 # Usage
 
 <ol>
-  <li>Edit the parameters in the configuration file
+  <li>Create a yaml configuration file to declare the parameters and their attributes
 
   ```
-  ~/<path to ros2_serial>/ros_cppserial/config/serial.yaml
+  ~/<PATH_TO_THIS_REPO>/ros_cppserial/config/<device_name>.yaml
   ```
   Parameters (with example values):
   ```yaml
   node_name:
-    serial_params:
-      use_port: False             # if True, the serial port will be used to connect to a device
-      port: "/dev/ttyS2"          # if the port is fixed it should be used instead of device_hwid
-      baud: 115200
-      device_hwid: "0403:6001"    # if the port is not fixed the serial interface node will scan the ports for a device with a specific hardware id
-    incoming_message:
-      header: "N26"               # set if the packet contains a header
-      footer: "/r/n"              # set if the packet contains a footer
-      packet_size: 0
-      rate_hz: 50                 # determines the rate of polling the serial port
-    publish_topic:
-      name: "hydromast_n26_data"
-      frame_id: "n26"
+    ros__parameters:
+      serial_params:
+        use_port: False             # if True, the serial port will be used to connect to a device
+        port: "/dev/ttyS2"          # if the port is fixed it should be used instead of device_hwid
+        baud: 115200
+        device_hwid: "0403:6001"    # if the port is not fixed the serial interface node will scan the ports for a device with a specific hardware id
+      incoming_message:
+        header: "N26"               # set if the packet contains a header
+        footer: "/r/n"              # set if the packet contains a footer
+        packet_size: 0
+        rate_hz: 50                 # determines the rate of polling the serial port
+      outgoing_message:
+        is_single: False 
+        is_continuous: False
+        message: "r"                # specific to ATI FT sensor: "s" for continuous reading, "r" for single reading 
+        rate_hz: 100                # 100 Hz
+      publish_topic:
+        name: "sensor_data"
+        frame_id: "sensor_id"
   ```
+
+  The node names should follow the following scheme: `<device_name>_interface`. When launching the nodes the same <device_name> will be used to create the node names and to look for parameter yaml files.
 
   <!-- to find the port of your device you can run
   ```
@@ -62,27 +70,33 @@ Clone the repository to your ROS 2 workspace
   ``` -->
   </li>
 
-  <li> Edit the launch file
+  <!-- <li> Edit the launch file
   
   ```
    ~/<path to ros2_serial>/ros2_cppserial/launch/serial_interface.launch.py
   ```
-  </li>
+  </li> -->
 
   <li>Build the packages with colcon.
 
   ```
   cd ~/<path to workspace>
-  colcon build --path ~/<path to ros2_serial>/* --symlink-install
+  colcon build --path ~/<PATH_TO_THIS_REPO>/* --symlink-install
   ```
  </li>
 
   <li>
 
-  With your device connected, run the interface:
+  With your devices connected, run the interface:
   ```
-  ros2 launch ros2_cppserial serial_interface.launch.py
+  ros2 launch ros2_cppserial multi_serial_interface.launch.py names:=device_names
   ```
+  where 'device_names' is a comma-separated list of device names, e.g., 
+  ```
+  ros2 launch ros2_cppserial multi_serial_interface.launch.py names:='gps,axia80'
+  ```
+  will launch two nodes: gps_interface and axia80_interface, and will look for gps.yaml and axia80.yaml respectively.
+  
 
   </li>
 </ol>
@@ -91,7 +105,7 @@ Clone the repository to your ROS 2 workspace
 - [x] ~~Write script that finds the serial port~~ A script is not necessary. Added command in guide.
 - [ ] Add Arduino example (check: using parameters from yaml to set up communications - https://arduinojson.org/); use .amentignore in Arduino directory
 - [x] Make node flexible with parameters in yaml file
-- [ ] Published message type can be set in yaml, the actual message type can be defined in ros2_serial_interfaces, TODO: look into parsing the packet and populating the message (can I look into the message type to plan the parsing?)
+- [x] Published message type can be set in yaml, the actual message type can be defined in ros2_serial_interfaces, TODO: look into parsing the packet and populating the message (can I look into the message type to plan the parsing?)
 - [x] c++ version works better and faster. Consider removing the python version
 - [x] license got messed up when the repository structure changed. TODO: FIX!
 - [x] Hydromasts have set serial ports, gps does not but has a serial hardware id
