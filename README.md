@@ -1,7 +1,6 @@
 # ROS 2 package for interfacing serial devices
 
 The serial interface node reads data from a serial port at a fixed rate, and publishes it as string with timestamp.
-The following refers to the c++ package (ros2_cppserial) contained in this repository. As of March 2024 the python package (ros2_pyserial) is no longer updated as the c++ version was more stable and fast.
 
 # Requirements
 - Ubuntu 20.04 LTS (Focal Fossa) or later
@@ -110,3 +109,7 @@ Clone the repository to your ROS 2 workspace
 - [x] license got messed up when the repository structure changed. TODO: FIX!
 - [x] Hydromasts have set serial ports, gps does not but has a serial hardware id
 - [ ] Clear buffer until recent message appears (there seem to be some old/incomplete packets in the buffer)
+
+# Notes
+- As of March 2024 the python package (ros2_pyserial) is no longer updated as the c++ version was more stable and at least twice as fast. 
+- As of July 2024 the python package has been removed.
