@@ -13,11 +13,7 @@ def launch_setup(context, *args, **kwargs):
     names = LaunchConfiguration('names').perform(context).split(',')
     print(f'Node names: {names}')
 
-    declared_package_name = DeclareLaunchArgument(
-        'package_name',
-        default_value='ros2_cppserial',
-        description='Package name to search for the config file')
-    package_name = LaunchConfiguration('package_name')
+    package_name = LaunchConfiguration('package_name').perform(context)
 
     def get_param_file(name):
         # params_dir = get_package_share_directory('ros2_cppserial')
@@ -29,6 +25,7 @@ def launch_setup(context, *args, **kwargs):
             name +
             '.yaml'  # Replace with your actual config file name
         ])
+        print(f'Config file path for {name}: {config_file_path.perform(LaunchContext())}')
         return config_file_path
 
     # Create a Node action for each name
