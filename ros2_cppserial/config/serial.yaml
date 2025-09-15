@@ -1,8 +1,8 @@
-hydromast_interface:
+serial_interface:
   ros__parameters:
     serial_params:
-      use_port: False       # if use_port is False, device_hwid will be used to scan all ports
-      port: "/dev/ttyACM1"  # has priority over device_hwid
+      use_port: True        # if use_port is False, device_hwid will be used to scan all ports
+      port: "/dev/ttyACM0"  # has priority over device_hwid
       baud: 115200
       device_hwid: "75735353238351A0A2E1"
     incoming_message:
@@ -11,8 +11,8 @@ hydromast_interface:
       packet_size: 50
       rate_hz: 10
     publish_topic:
-      name: "hydromast_data"
-      frame_id: "n03"
+      name: "serial_data"
+      frame_id: ""
 
 
       # payload:

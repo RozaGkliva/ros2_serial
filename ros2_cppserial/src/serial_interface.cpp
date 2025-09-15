@@ -77,7 +77,7 @@ SerialInterface::SerialInterface()
 
     // create a timer to read from serial port
     auto timer_period_ = int((1.0/read_rate) * 1000);  // calculate sampling period and convert to milliseconds
-    timer_ = this->create_wall_timer(std::chrono::milliseconds(timer_period_), std::bind(&SerialInterface::readSerial, this));
+    timer_ = this->create_wall_timer(std::chrono::milliseconds(timer_period_), std::bind(&SerialInterface::read_serial, this));
 
     // if ati sensor is in continuous mode, send a request via serial
     if (is_continuous_)
@@ -85,10 +85,14 @@ SerialInterface::SerialInterface()
         serial_device.write("s");
     }
 
-    // create messag type and publisher
+    // create message type and publisher
     message_ = ros2_serial_interfaces::msg::SerialString();
     message_.header.frame_id = frame_id_;
-    publisher_ = this->create_publisher<ros2_serial_interfaces::msg::SerialString>(topic_name, 10); 
+    publisher_ = this->create_publisher<ros2_serial_interfaces::msg::SerialString>(topic_name, 10);
+
+    // create subscriber for outgoing messages
+    subscriber_ = this->create_subscription<ros2_serial_interfaces::msg::SerialString>(
+        "serial_outgoing", 10, std::bind(&SerialInterface::outgoing_message_callback, this, std::placeholders::_1));
 }
 
 // private member functions
@@ -159,7 +163,7 @@ void SerialInterface::init_serial(std::string port_)
     }
 }
 
-void SerialInterface::readSerial()
+void SerialInterface::read_serial()
 {
     if (is_single_)
     {
@@ -183,6 +187,16 @@ void SerialInterface::readSerial()
         publisher_->publish(message_);
     }
 }
+
+void SerialInterface::outgoing_message_callback(const ros2_serial_interfaces::msg::SerialString::SharedPtr msg)
+{
+    // convert message to string
+    std::string out_msg = msg->data + "\n";
+
+    // RCLCPP_INFO(this->get_logger(), "Sending message: %s", msg->data.c_str());
+    serial_device.write(out_msg);
+}
+
 
 /**
  * Main entry point for the node.

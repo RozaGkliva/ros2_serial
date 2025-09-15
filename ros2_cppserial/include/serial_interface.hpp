@@ -33,10 +33,12 @@ public:
 private:
     std::string scan_ports();
     void init_serial(std::string device_port_);
-    void readSerial();
+    void read_serial();
+    void outgoing_message_callback(const ros2_serial_interfaces::msg::SerialString::SharedPtr msg);
 
     ros2_serial_interfaces::msg::SerialString message_;
     rclcpp::Publisher<ros2_serial_interfaces::msg::SerialString>::SharedPtr publisher_;
+    rclcpp::Subscription<ros2_serial_interfaces::msg::SerialString>::SharedPtr subscriber_;
     std::string frame_id_;
     std::string device_hwid_;
     int baud_;
