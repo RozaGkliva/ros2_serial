@@ -123,12 +123,13 @@ std::string SerialInterface::scan_ports()
             RCLCPP_INFO(this->get_logger(), "device_found: %s\n", device_.c_str());
             port_ = device.port.c_str();
             RCLCPP_INFO(this->get_logger(), "Found device_port: %s\n", port_.c_str());
+            break;
         }
-        // else
-        // {
-        //     RCLCPP_INFO(this->get_logger(), "Device not found, returning port as nan");  // TODO: figure out why this runs even when device is found
-        //     port_ = "nan";
-        // }
+        else
+        {
+            RCLCPP_INFO(this->get_logger(), "Device not found, returning port as nan");  // TODO: figure out why this runs even when device is found
+            port_ = "nan";
+        }
     }
     return port_;
 }
