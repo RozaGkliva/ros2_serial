@@ -11,7 +11,7 @@ project(ros2_cppserial)
 #   set(CMAKE_CXX_STANDARD 14)
 # endif()
 
-# Default to C++14
+# Default to C++17
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 17)
 endif()
